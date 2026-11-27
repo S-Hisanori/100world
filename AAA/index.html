@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>もし世界が100人の村だったら｜世界の今・インタラクティブダッシュボード</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="container hero-inner">
+      <div class="hero-badge-row">
+        <span class="pill pill-accent">世界の今を知るダッシュボード</span>
+        <span class="pill pill-privacy" title="入力内容はブラウザのメモリ内のみで処理され、Cookie・LocalStorage・外部サーバー等へ一切保存・送信されません">
+          🔒 入力内容は保存されません（メモリ内完結）
+        </span>
+      </div>
+      <h1>もし世界が<span class="highlight">100人の村</span>だったら</h1>
+      <p class="hero-lead">
+        世界約<strong>83億人</strong>（2026年推計）を<strong>100人の村</strong>に縮尺して、人口・所得・健康・教育・情報・宗教・言語の「世界の今」を直感的に可視化します。自分のプロフィールを入力して（すべて任意・スキップ可）、村の中で自分がどんな位置にいるのか比較できます。
+      </p>
+      <div class="hero-stats" id="hero-stats"></div>
+    </div>
+  </header>
+
+  <main class="container main-layout">
+    <!-- Section 1: Interactive 100-Person Village Matrix -->
+    <section class="card village-section" aria-labelledby="village-heading">
+      <div class="section-header">
+        <div>
+          <h2 id="village-heading">100人の村ビジュアライザー</h2>
+          <p class="section-sub">テーマを切り替えると、100人の村人がその比率に色分けされます。下の「あなたとの比較」を入力すると、該当する位置に「あなた」が表示されます。</p>
+        </div>
+        <div class="lens-meta" id="lens-meta"></div>
+      </div>
+
+      <div class="lens-tabs" id="lens-tabs" role="tablist" aria-label="表示テーマ選択"></div>
+
+      <div class="village-workspace">
+        <div class="village-grid-wrap">
+          <div class="village-grid" id="village-grid" role="img" aria-label="100人の村を表す10×10のアイコン配列"></div>
+          <p class="grid-footnote" id="grid-footnote"></p>
+        </div>
+        <aside class="village-legend-panel" id="village-legend-panel"></aside>
+      </div>
+    </section>
+
+    <!-- Section 2: Personal Comparison Builder -->
+    <section class="card compare-section" aria-labelledby="compare-heading">
+      <div class="section-header">
+        <div>
+          <h2 id="compare-heading">100人の村の中の「あなた」を比較する</h2>
+          <p class="section-sub">
+            答えたくない項目は未回答（スキップ）のままで構いません。入力内容はブラウザの画面を閉じる・再読み込みすると消去され、一切保存されません。
+          </p>
+        </div>
+        <button type="button" class="btn-secondary" id="reset-profile-btn">入力をすべてリセット</button>
+      </div>
+
+      <div class="compare-layout">
+        <form class="profile-form" id="profile-form" autocomplete="off">
+          <div class="form-grid">
+            <div class="field">
+              <label for="input-age">年齢（歳）</label>
+              <div class="input-with-skip">
+                <input type="number" id="input-age" min="0" max="120" step="1" placeholder="例: 30（空欄でスキップ）" />
+              </div>
+              <small class="field-hint">UN WPP 2024（2026年）の年齢階級と比較</small>
+            </div>
+
+            <div class="field">
+              <label for="input-sex">性別</label>
+              <select id="input-sex">
+                <option value="">回答しない（スキップ）</option>
+                <option value="female">女性</option>
+                <option value="male">男性</option>
+              </select>
+              <small class="field-hint">UN WPP 2024（2026年）の男女比と比較</small>
+            </div>
+
+            <div class="field">
+              <label for="input-region">住んでいる地域</label>
+              <select id="input-region">
+                <option value="">回答しない（スキップ）</option>
+                <option value="asia">アジア</option>
+                <option value="africa">アフリカ</option>
+                <option value="europe">ヨーロッパ</option>
+                <option value="lac">ラテンアメリカ・カリブ海</option>
+                <option value="na">北アメリカ（米国・カナダ等）</option>
+                <option value="oceania">オセアニア</option>
+              </select>
+              <small class="field-hint">UN WPP 2024（2026年）地域区分</small>
+            </div>
+
+            <div class="field">
+              <label for="input-urban">居住エリア</label>
+              <select id="input-urban">
+                <option value="">回答しない（スキップ）</option>
+                <option value="urban">都市部</option>
+                <option value="rural">農村部</option>
+              </select>
+              <small class="field-hint">世界銀行 WDI（2025年）</small>
+            </div>
+
+            <div class="field field-wide">
+              <label for="input-income-bracket">1日の生活費（2021年PPP・購買力平価米ドル基準）</label>
+              <div class="income-inputs">
+                <select id="input-income-bracket">
+                  <option value="">回答しない（スキップ）</option>
+                  <option value="lt3">$3.00未満 / 日（極度の貧困ライン未満）</option>
+                  <option value="3to8.3">$3.00 〜 $8.30未満 / 日</option>
+                  <option value="8.3to20">$8.30 〜 $20.00未満 / 日</option>
+                  <option value="20to50">$20.00 〜 $50.00未満 / 日</option>
+                  <option value="ge50">$50.00以上 / 日</option>
+                </select>
+                <span class="or-sep">または金額指定:</span>
+                <input type="number" id="input-income-usd" min="0" step="0.5" placeholder="例: 35 ($/日・2021 PPP)" />
+              </div>
+              <small class="field-hint">
+                世界銀行 PIP（2024年・2021年PPP基準）。物価差を調整した購買力平価ドル基準のため、市場為替レートでの日本円換算とは異なります。
+              </small>
+            </div>
+
+            <div class="field">
+              <label for="input-water">飲み水へのアクセス</label>
+              <select id="input-water">
+                <option value="">回答しない（スキップ）</option>
+                <option value="safely_managed">自宅・敷地内で安全に管理された飲み水がある</option>
+                <option value="basic_only">往復30分以内の改善水源はある（安全管理基準外）</option>
+                <option value="unimproved">基本的な飲み水サービスにアクセスできない</option>
+              </select>
+              <small class="field-hint">WHO/UNICEF JMP（2024年）</small>
+            </div>
+
+            <div class="field">
+              <label for="input-literacy">読み書き（15歳以上基準）</label>
+              <select id="input-literacy">
+                <option value="">回答しない（スキップ）</option>
+                <option value="literate">日常的な読み書きができる</option>
+                <option value="illiterate">読み書きが難しい・できない</option>
+              </select>
+              <small class="field-hint">UNESCO UIS / 世界銀行 WDI（2024年）</small>
+            </div>
+
+            <div class="field">
+              <label for="input-internet">インターネット利用</label>
+              <select id="input-internet">
+                <option value="">回答しない（スキップ）</option>
+                <option value="online">利用している</option>
+                <option value="offline">利用していない</option>
+              </select>
+              <small class="field-hint">ITU Facts and Figures（2026年）</small>
+            </div>
+
+            <div class="field">
+              <label for="input-religion">宗教</label>
+              <select id="input-religion">
+                <option value="">回答しない（スキップ）</option>
+                <option value="christian">キリスト教</option>
+                <option value="muslim">イスラム教</option>
+                <option value="unaffiliated">無宗教（特定の宗教に属さない）</option>
+                <option value="hindu">ヒンドゥー教</option>
+                <option value="buddhist">仏教</option>
+                <option value="other">その他の宗教（神道・民間信仰・シク教・道教等）</option>
+                <option value="jewish">ユダヤ教</option>
+              </select>
+              <small class="field-hint">Pew Research Center（2020年・最新確定値）</small>
+            </div>
+
+            <div class="field field-wide">
+              <label for="input-language">母語・日常的に話す言語（Ethnologue 2026 公開範囲）</label>
+              <select id="input-language">
+                <option value="">回答しない（スキップ）</option>
+                <optgroup label="総話者数（母語＋第2言語）トップ10言語">
+                  <option value="eng">英語（総話者 14.93億人 / 村で約18人 ※第2言語含む）</option>
+                  <option value="cmn">中国語・北京官話（総話者 11.83億人 / 村で約14人 ※第2言語含む）</option>
+                  <option value="hin">ヒンディー語（総話者 6.11億人 / 村で約7人 ※第2言語含む）</option>
+                  <option value="spa">スペイン語（総話者 5.61億人 / 村で約7人 ※第2言語含む）</option>
+                  <option value="arb">標準アラビア語（総話者 3.35億人 / 村で約4人 ※第2言語含む）</option>
+                  <option value="fra">フランス語（総話者 3.34億人 / 村で約4人 ※第2言語含む）</option>
+                  <option value="ben">ベンガル語（総話者 2.74億人 / 村で約3人 ※第2言語含む）</option>
+                  <option value="por">ポルトガル語（総話者 2.69億人 / 村で約3人 ※第2言語含む）</option>
+                  <option value="ind">インドネシア語（総話者 2.55億人 / 村で約3人 ※第2言語含む）</option>
+                  <option value="urd">ウルドゥー語（総話者 2.46億人 / 村で約3人 ※第2言語含む）</option>
+                </optgroup>
+                <optgroup label="上記トップ10以外">
+                  <option value="other_top200">日本語など（上記トップ10以外の主要言語・上位200言語内）</option>
+                  <option value="rare">その他の希少言語（上位200言語外）</option>
+                </optgroup>
+              </select>
+              <small class="field-hint">
+                ※Ethnologue 2026無料公開データには「母語（L1）のみ」の言語別数値と11位以下の個別数値が含まれないため、トップ10言語はL1+L2総話者数での参考比較となります。
+              </small>
+            </div>
+          </div>
+        </form>
+
+        <div class="compare-results" id="compare-results" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Section 3: Thematic Breakdown Cards -->
+    <section class="themes-section" aria-labelledby="themes-heading">
+      <div class="section-header-plain">
+        <h2 id="themes-heading">テーマ別「100人の村」データ詳細</h2>
+        <p class="section-sub">すべての指標に元のパーセンテージ、データ年、公式出典リンクを記載しています。</p>
+      </div>
+      <div class="themes-grid" id="themes-grid"></div>
+    </section>
+
+    <!-- Section 4: Data Transparency & Limitations -->
+    <section class="card transparency-section" aria-labelledby="transparency-heading">
+      <h2 id="transparency-heading">データの扱い・取得できなかった数値と出典一覧</h2>
+      <div class="notice-box">
+        <h3>推測で補っていない項目・データ上の注意点</h3>
+        <ul>
+          <li>
+            <strong>Ethnologue（2026年版・第29版）の母語（L1のみ）別データおよび11位以下（日本語など）：</strong>
+            <a href="https://www.ethnologue.com/insights/ethnologue200/" target="_blank" rel="noopener noreferrer">Ethnologue 200</a> の無料公開ページで取得できるのは「母語＋第2言語の合計話者数（上位10言語）」のみであり、母語話者（L1）単独の内訳や11位〜200位の個別数値は有料サブスクリプション限定のため未収録です。公開されているL1全体指標（「上位20言語で計37億人超が母語」「上位200言語で88%超が母語」）のみをそのまま掲載しています。
+          </li>
+          <li>
+            <strong>Pew Research Centerの宗教データの基準年：</strong>
+            最新レポート（2025年6月公表）の世界宗教構成は <strong>2020年</strong> が最新確定値です。2021年〜2026年の実測値は未公表のため2020年値を使用しています。
+          </li>
+          <li>
+            <strong>100人換算の端数調整：</strong>
+            地域分布や所得階層など四捨五入のみでは合計が99人・101人になる分類では、100人グリッド表示のために最大剰余法で合計ちょうど100人に調整し、元の正確な割合（%）を必ず併記しています。
+          </li>
+        </ul>
+      </div>
+
+      <div class="sources-table-wrap">
+        <table class="sources-table">
+          <thead>
+            <tr>
+              <th>分野</th>
+              <th>指標</th>
+              <th>データ年</th>
+              <th>出典機関・リンク</th>
+            </tr>
+          </thead>
+          <tbody id="sources-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>
+        本ダッシュボードは公開公式統計（国連・世界銀行・WHO/UNICEF JMP・ITU・UNESCO UIS・Pew Research Center・Ethnologue）に基づき構築されています。入力データはブラウザのメモリ上でのみ一時的に処理され、保存・送信は一切行われません。
+      </p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
